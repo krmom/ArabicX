@@ -1,22 +1,38 @@
+/* ============================================================
+   DESIGN-TOKENS
+   Alle Farben, Schriften und Radien laufen über diese Variablen.
+   Das ist die zentrale Stelle, um das Erscheinungsbild der ganzen
+   Seite zu ändern, ohne an vielen Stellen suchen zu müssen.
+
+   Farbe ändern: einfach den Hex-Wert hier anpassen, er wirkt sich
+   automatisch überall aus, wo die Variable benutzt wird.
+
+   Neue Schrift einbinden: Google-Fonts-Link in index.html anpassen
+   und den Font-Namen hier bei --font-display bzw. --font-body eintragen.
+   ============================================================ */
 :root {
-  --bg: #FAFAF8;
-  --surface: #FFFFFF;
-  --ink: #14171F;
-  --ink-soft: #4A4F5C;
-  --muted: #8A8F9C;
-  --accent: #E3A231;
-  --accent-deep: #B87F1E;
-  --accent-ink: #3D2E0E;
-  --line: rgba(20, 23, 31, 0.1);
-  --error: #C0392B;
-  --radius: 18px;
-  --radius-sm: 10px;
-  --font-display: 'Space Grotesk', 'Inter', sans-serif;
-  --font-body: 'Inter', -apple-system, sans-serif;
-  --font-arabic: 'Noto Sans Arabic', sans-serif;
+  --bg: #FAFAF8;              /* Seitenhintergrund */
+  --surface: #FFFFFF;         /* Hintergrund von Karten, Formular-Panel etc. */
+  --ink: #14171F;             /* Haupttextfarbe / dunkle Flächen (Header-Nav, Footer) */
+  --ink-soft: #4A4F5C;        /* etwas hellerer Text für Absätze */
+  --muted: #8A8F9C;           /* Beschriftungen, Platzhalter, unwichtigere Texte */
+  --accent: #E3A231;          /* Akzentfarbe (Gold/Amber) für Highlights */
+  --accent-deep: #B87F1E;     /* dunklere Variante der Akzentfarbe, z. B. für Hover */
+  --accent-ink: #3D2E0E;      /* dunkler Text auf der Akzentfarbe (Kontrast) */
+  --line: rgba(20, 23, 31, 0.1); /* dezente Trennlinien und Rahmen */
+  --error: #C0392B;           /* Fehlermeldungen im Formular */
+  --radius: 18px;             /* großer Rundungsradius (Karten, Panels) */
+  --radius-sm: 10px;          /* kleiner Rundungsradius (Inputs, Listen-Items) */
+  --font-display: 'Space Grotesk', 'Inter', sans-serif; /* Überschriften */
+  --font-body: 'Inter', -apple-system, sans-serif;      /* Fließtext */
+  --font-arabic: 'Noto Sans Arabic', sans-serif;        /* arabische Textzeilen */
 }
 
+/* border-box sorgt dafür, dass padding/border nicht zur angegebenen
+   Breite/Höhe dazugerechnet werden -> einfacheres Layouten */
 * { box-sizing: border-box; }
+
+/* sanftes Scrollen zu Ankern (z. B. Klick auf "Termin buchen" im Menü) */
 html { scroll-behavior: smooth; }
 
 body {
@@ -28,11 +44,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* versteckt Inhalte visuell, lässt sie aber für Screenreader bestehen
+   (z. B. "Menü öffnen" beim Hamburger-Button) */
 .sr-only {
   position: absolute; width: 1px; height: 1px;
   overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap;
 }
 
+/* .wrap begrenzt die Inhaltsbreite und zentriert sie - wird in fast
+   jeder Sektion als äußerer Container verwendet */
 .wrap { max-width: 1140px; margin: 0 auto; padding: 0 32px; }
 
 h1, h2, h3 {
@@ -44,6 +64,8 @@ h1, h2, h3 {
   letter-spacing: -0.01em;
 }
 
+/* clamp(min, bevorzugt, max) skaliert die Schriftgröße flüssig
+   zwischen den Bildschirmbreiten, ohne dass Media Queries nötig sind */
 h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); }
 h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); }
 h3 { font-size: 1.15rem; }
@@ -52,7 +74,12 @@ p { margin: 0 0 1em; max-width: 60ch; color: var(--ink-soft); }
 
 a { color: var(--accent-deep); }
 
-/* Header */
+/* ============================================================
+   HEADER / NAVIGATION
+   position: sticky hält die Leiste beim Scrollen oben fest.
+   backdrop-filter erzeugt den "Glas"-Effekt (leicht durchscheinend,
+   unscharf) hinter der Navigation.
+   ============================================================ */
 .site-header {
   position: sticky; top: 0; z-index: 40;
   background: rgba(250, 250, 248, 0.78);
@@ -65,6 +92,7 @@ a { color: var(--accent-deep); }
 
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
 
+/* quadratisches "X"-Icon links vom Markennamen */
 .brand-mark {
   width: 34px; height: 34px;
   border-radius: 10px;
@@ -81,6 +109,7 @@ a { color: var(--accent-deep); }
 .main-nav a { text-decoration: none; color: var(--ink-soft); font-size: 0.95rem; font-weight: 500; }
 .main-nav a:hover { color: var(--ink); }
 
+/* hervorgehobener "Termin buchen"-Link als Pill-Button */
 .nav-cta {
   background: var(--ink);
   color: var(--bg) !important;
@@ -89,17 +118,24 @@ a { color: var(--accent-deep); }
 }
 .nav-cta:hover { background: var(--accent-deep); }
 
+/* Hamburger-Icon: per Default unsichtbar (display: none),
+   wird erst in der Media Query bei kleinen Bildschirmen aktiviert */
 .nav-toggle {
   display: none; flex-direction: column; justify-content: center; gap: 5px;
   width: 40px; height: 40px; background: none; border: none; cursor: pointer;
 }
 .nav-toggle span { display: block; width: 22px; height: 2px; border-radius: 2px; background: var(--ink); }
 
-/* Hero */
+/* ============================================================
+   HERO
+   Zweispaltiges Grid: Textblock links (1.25 Anteile),
+   Statistik-Kacheln rechts (0.85 Anteile).
+   ============================================================ */
 .hero { padding: 72px 0 64px; }
 
 .hero-grid { display: grid; grid-template-columns: 1.25fr 0.85fr; gap: 56px; align-items: center; }
 
+/* kleines Badge über der Hauptüberschrift */
 .hero-eyebrow {
   display: inline-block;
   font-size: 0.85rem; font-weight: 500;
@@ -116,6 +152,7 @@ a { color: var(--accent-deep); }
 
 .hero-actions { display: flex; gap: 14px; margin-top: 30px; flex-wrap: wrap; }
 
+/* Basis-Button, wird durch .btn-primary oder .btn-ghost eingefärbt */
 .btn {
   display: inline-block;
   padding: 14px 28px;
@@ -127,7 +164,7 @@ a { color: var(--accent-deep); }
   font-family: var(--font-body);
   transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
-.btn:active { transform: scale(0.98); }
+.btn:active { transform: scale(0.98); } /* kleiner "Klick"-Effekt */
 
 .btn-primary { background: var(--ink); color: var(--bg); }
 .btn-primary:hover { background: var(--accent-deep); border-color: var(--accent-deep); }
@@ -135,6 +172,7 @@ a { color: var(--accent-deep); }
 .btn-ghost { background: transparent; color: var(--ink); }
 .btn-ghost:hover { background: rgba(20,23,31,0.05); }
 
+/* 2x2-Raster für die vier Statistik-Kacheln im Hero */
 .hero-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -152,10 +190,16 @@ a { color: var(--accent-deep); }
 .stat-number { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--ink); }
 .stat-label { font-size: 0.85rem; color: var(--muted); }
 
+/* nimmt beide Spalten der Reihe ein (für die vierte, breite Kachel) */
 .stat-chip-wide { grid-column: span 2; }
 .stat-chip-wide .stat-label { font-size: 0.88rem; color: var(--ink-soft); }
 
-/* Sections */
+/* ============================================================
+   ALLGEMEINE SEKTIONS-ABSTÄNDE
+   .section wird für jeden großen Inhaltsblock verwendet (Über mich,
+   Leistungen, Ablauf, Preise, Buchung), damit der vertikale Rhythmus
+   überall gleich bleibt.
+   ============================================================ */
 .section { padding: 88px 0; }
 
 .section-label {
@@ -165,7 +209,9 @@ a { color: var(--accent-deep); }
   margin-bottom: 10px;
 }
 
-/* About */
+/* ============================================================
+   ÜBER MICH
+   ============================================================ */
 .about-grid { display: grid; grid-template-columns: 1.4fr 0.9fr; gap: 56px; align-items: start; }
 
 .credential-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 18px; }
@@ -179,13 +225,19 @@ a { color: var(--accent-deep); }
   padding: 16px 18px;
 }
 
+/* kleiner runder Punkt vor jedem Qualifikationspunkt */
 .credential-mark {
   width: 8px; height: 8px; border-radius: 50%;
   background: var(--accent);
   margin-top: 7px; flex-shrink: 0;
 }
 
-/* Services */
+/* ============================================================
+   LEISTUNGEN
+   auto-fit/repeat wäre eine Alternative zu festen 3 Spalten, hier
+   bewusst über Media Queries gesteuert (3 -> 2 -> 1 Spalten),
+   damit die Kartenbreite immer gleichmäßig bleibt.
+   ============================================================ */
 .service-grid {
   margin-top: 32px;
   display: grid; grid-template-columns: repeat(3, 1fr);
@@ -209,7 +261,10 @@ a { color: var(--accent-deep); }
 .service-card h3 { margin-bottom: 8px; }
 .service-card p { margin: 0; font-size: 0.94rem; }
 
-/* Process */
+/* ============================================================
+   ABLAUF
+   Nummerierte Liste mit rundem Zahlen-Badge links, Text rechts.
+   ============================================================ */
 .steps { list-style: none; margin: 32px 0 0; padding: 0; }
 
 .steps li { display: grid; grid-template-columns: 48px 1fr; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--line); }
@@ -227,7 +282,11 @@ a { color: var(--accent-deep); }
 .steps h3 { margin: 0 0 4px; }
 .steps p { margin: 0; }
 
-/* Pricing */
+/* ============================================================
+   PREISE
+   Bewusst mit Flexbox statt einer echten <table> gebaut, damit die
+   Zeilen auf schmalen Bildschirmen nicht seitlich wegscrollen.
+   ============================================================ */
 .pricing-note { max-width: 70ch; }
 
 .price-table {
@@ -235,7 +294,7 @@ a { color: var(--accent-deep); }
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow: hidden; /* schneidet die eckigen Ecken der inneren Zeilen sauber ab */
 }
 
 .price-row {
@@ -254,7 +313,12 @@ a { color: var(--accent-deep); }
 
 .price-row span:last-child { font-weight: 500; white-space: nowrap; }
 
-/* Booking */
+/* ============================================================
+   BUCHUNGSFORMULAR
+   .form-step ist per Default ausgeblendet (display: none) und wird
+   nur bei der Klasse .is-active sichtbar - so entsteht der
+   mehrstufige Assistent, gesteuert vom <script> in index.html.
+   ============================================================ */
 .booking-panel {
   margin-top: 32px;
   background: var(--surface);
@@ -263,6 +327,7 @@ a { color: var(--accent-deep); }
   padding: 40px;
 }
 
+/* Fortschrittsanzeige oben im Formular (Angaben / Zusammenfassung / Zahlung / Bestätigung) */
 .progress-track { display: flex; gap: 0; margin-bottom: 32px; border-bottom: 1px solid var(--line); }
 
 .progress-step {
@@ -278,9 +343,11 @@ a { color: var(--accent-deep); }
   font-size: 0.78rem;
 }
 
+/* aktueller Schritt: dunkel hervorgehoben */
 .progress-step.is-active { color: var(--ink); border-bottom-color: var(--accent); }
 .progress-step.is-active span { background: var(--ink); border-color: var(--ink); color: var(--accent); }
 
+/* bereits abgeschlossene Schritte: golden markiert */
 .progress-step.is-done { color: var(--ink); }
 .progress-step.is-done span { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 
@@ -314,6 +381,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent-deep); }
 
 .form-error { color: var(--error); font-size: 0.88rem; min-height: 1.2em; margin: 12px 0 0; }
 
+/* Zusammenfassungs-Karte in Schritt 2, Inhalt wird per JS eingefügt */
 .summary-card { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 24px; background: var(--bg); }
 
 .summary-card dl { display: grid; grid-template-columns: 1fr auto; gap: 10px 20px; margin: 0; }
@@ -327,11 +395,15 @@ input:focus, select:focus { outline: none; border-color: var(--accent-deep); }
   display: flex; justify-content: space-between;
 }
 
+/* Bestätigungsbildschirm in Schritt 4, Inhalt wird per JS eingefügt */
 .confirmation { text-align: center; padding: 20px 0; }
 .confirmation h3 { color: var(--accent-deep); }
 .confirmation .btn { margin-top: 18px; }
 
-/* Footer */
+/* ============================================================
+   FOOTER
+   Dunkler Hintergrund als Kontrast zum hellen Rest der Seite.
+   ============================================================ */
 .site-footer { background: var(--ink); color: rgba(250,250,248,0.85); padding: 64px 0 0; }
 
 .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; padding-bottom: 40px; }
@@ -347,34 +419,96 @@ input:focus, select:focus { outline: none; border-color: var(--accent-deep); }
   padding: 20px 0; font-size: 0.82rem; color: rgba(250,250,248,0.55);
 }
 
-/* Responsive */
+/* ============================================================
+   RESPONSIVE ANPASSUNGEN
+   Mobile-first wäre die Alternative; hier arbeiten wir "desktop-first"
+   mit max-width-Breakpoints, die von groß nach klein greifen.
+   Eigenen Breakpoint hinzufügen: einfach einen weiteren
+   @media (max-width: XXXpx) { ... }-Block nach demselben Muster ergänzen.
+   ============================================================ */
+
+/* Tablet: Leistungen von 3 auf 2 Spalten, etwas weniger Außenabstand */
 @media (max-width: 960px) {
   .service-grid { grid-template-columns: repeat(2, 1fr); }
+  .wrap { padding: 0 24px; }
 }
 
+/* kleines Tablet / großes Handy: einspaltiges Layout, Hamburger-Menü aktiv */
 @media (max-width: 860px) {
   .hero-grid, .about-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   .service-grid { grid-template-columns: 1fr; }
-  .nav-toggle { display: flex; }
+  .nav-toggle { display: flex; } /* Hamburger-Icon wird sichtbar */
   .main-nav ul {
-    display: none;
-    position: absolute; top: 80px; left: 0; right: 0;
+    display: none; /* per Default zugeklappt, .is-open blendet es ein (siehe JS) */
+    position: absolute; top: 72px; left: 0; right: 0;
     background: var(--bg);
     flex-direction: column; align-items: stretch;
-    padding: 12px 32px 20px;
+    padding: 12px 24px 20px;
     border-bottom: 1px solid var(--line);
     gap: 4px;
+    max-height: calc(100vh - 72px);
+    overflow-y: auto;
   }
   .main-nav ul.is-open { display: flex; }
-  .main-nav a { display: block; padding: 10px 0; }
-  .nav-cta { display: inline-block; margin-top: 8px; text-align: center; }
-  .progress-track { flex-wrap: wrap; }
+  .main-nav a { display: block; padding: 12px 0; font-size: 1.02rem; }
+  .nav-cta { display: block; margin-top: 10px; text-align: center; }
+  .progress-track { flex-wrap: wrap; row-gap: 12px; }
   .progress-step { flex: 1 1 45%; }
   .booking-panel { padding: 28px 22px; }
+  .section { padding: 64px 0; }
+  .hero { padding: 48px 0 48px; }
 }
 
+/* Handy: kleinere Schrift, Buttons und Formular-Aktionen volle Breite */
+@media (max-width: 600px) {
+  .wrap { padding: 0 18px; }
+  .header-row { height: 68px; }
+  .site-header { top: 0; }
+  .main-nav ul { top: 68px; max-height: calc(100vh - 68px); }
+  .brand-word { font-size: 1.15rem; }
+  .brand-mark { width: 30px; height: 30px; font-size: 0.9rem; }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+  .hero-eyebrow { font-size: 0.8rem; padding: 5px 12px; }
+  .hero-arabic { font-size: 1.1rem; }
+  .hero-lede { max-width: none; }
+
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn { text-align: center; }
+
+  .hero-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-chip { padding: 16px 16px; }
+  .stat-number { font-size: 1.3rem; }
+  .stat-chip-wide { grid-column: span 2; }
+
+  .section { padding: 48px 0; }
+
+  .price-row { padding: 14px 16px; font-size: 0.9rem; gap: 12px; }
+  .price-row span:first-child { max-width: 60%; }
+
+  .booking-panel { padding: 22px 16px; border-radius: 16px; }
+  .progress-step { font-size: 0.78rem; flex: 1 1 100%; }
+  .progress-track { border-bottom: none; row-gap: 8px; }
+  .progress-step { border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+
+  .form-actions { flex-direction: column-reverse; }
+  .form-actions .btn { width: 100%; text-align: center; }
+
+  .footer-grid { padding-bottom: 32px; }
+  .site-footer { padding: 48px 0 0; }
+}
+
+/* sehr kleine Displays: Statistik-Kacheln einspaltig, Überschrift kleiner */
+@media (max-width: 380px) {
+  .hero-stats { grid-template-columns: 1fr; }
+  .stat-chip-wide { grid-column: span 1; }
+  h1 { font-size: 1.7rem; }
+}
+
+/* respektiert die Systemeinstellung "Bewegungen reduzieren" */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
